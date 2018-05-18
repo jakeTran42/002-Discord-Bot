@@ -1,3 +1,6 @@
+// environment variables
+require('dotenv').config();
+
 // require the discord.js module
 const Discord = require('discord.js');
 
@@ -8,15 +11,15 @@ const client = new Discord.Client();
 // this event will trigger whenever your bot:
 // - finishes logging in
 // - reconnects after disconnecting
-client.on('ready', () => {
+client.on(('ready', 'message'), () => {
     console.log('Ready!');
 });
 
 client.on('message', message => {
-    if (message.content.includes('hi 002')) {
-        message.channel.send('Hello my Darling!')
+    if (message.content.includes('!hi')) {
+        message.channel.send('Hello my Darling! How Are you today?' + ':smiling_imp:')
     }
 });
 
 // login to Discord with your app's token
-client.login('NDQ2NTgxMzI1NTc5ODEyODY0.Dd7K1A.xcD17803AJiYKJiPvG7AVAHXTqE');
+client.login(process.env.TOKEN);
