@@ -1,14 +1,26 @@
-// environment variables
 require('dotenv').config();
+
+// environment variables
+const fs = require('fs')
 const {prefix} = require('./config/config.json');
-const greeting_msg = require('./greetings/greetings.json');
-const time_greeting = require('./greetings/greeting.js');
 
 // require the discord.js module
 const Discord = require('discord.js');
+const cooldowns = new Discord.Collection();
 
 // create a new Discord client
 const client = new Discord.Client();
+
+client.commands = new Discord.Collection();
+const commandFiles = fs.readdirSync('./commands');
+
+for (const file of commandFiles) {
+    const command = require(`./commands/${file}`);
+
+    // set a new item in the Collection
+    // with the key as the command name and the value as the exported module
+    client.commands.set(command.name, command);
+}
 
 // when the client is ready, run this code
 // this event will trigger whenever your bot:
@@ -20,82 +32,68 @@ client.on(('ready'), () => {
 
 client.on('message', message => {
 
+    // sanity check if it have prefix
     if (!message.content.startsWith(prefix) || message.author.bot) return;
     
+    // getting arguments and command name
     const args = message.content.slice(prefix.length).split(/ +/);
-    const command = args.shift().toLowerCase();
+    const commandName = args.shift().toLowerCase();
 
-    if ((command === ('hi')) || (command === ('hello'))) {
-        return message.channel.send(time_greeting())
-    } 
+    // if our dynamic command files have the command name, if not return
+    // if (!client.commands.has(commandName)) return;
+
+    // getting command object base on command name
+    // const command = client.commands.get(commandName);
+
+    const command = client.commands.get(commandName) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
+    if (!command) return;
+
+    // if the command is guild Only and cannot be called in DM
+    if (command.guildOnly && message.channel.type !== 'text') {
+        return message.reply('Sorry darling, I can\'t execute that command inside DMs!');
+    }
+
+    // if the command needs and argument and user previded with none
+    if (command.args && !args.length) {
+        let reply = `Darling didn't provide any arguments, ${message.author}!`;
+        if (command.usage) {
+            reply += `\nThe proper usage of !role would be: \`${prefix}${command.name} ${command.usage}\``;
+        }
+        return message.channel.send(reply);
+    };
+
+    // For command that need to have cooldowns
+    if (!cooldowns.has(command.name)) {
+        cooldowns.set(command.name, new Discord.Collection());
+    }
+
+    const now = Date.now();
+    const timestamps = cooldowns.get(command.name);
+    const cooldownAmount = (command.cooldown || 3) * 1000;
+
+    if (!timestamps.has(message.author.id)) {
+        timestamps.set(message.author.id, now);
+        setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
+    }
+    else {
+        const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
+
+        if (now < expirationTime) {
+            const timeLeft = (expirationTime - now) / 1000;
+            return message.reply(` Darling, please wait ${timeLeft.toFixed(1)} more second(s) before reusing the \`!${command.name}\` command.`);
+        }
     
-    else if ((command === ('night')) || (command === ('goodnight'))) {
-        return message.channel.send(greeting_msg.goodnight_msg);
+        timestamps.set(message.author.id, now);
+        setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
     }
 
-    else if (command === ('server')) {
-        return message.channel.send(`This Plantation is: '${message.guild.name}'
-        \nTotal Parasites: ${message.guild.memberCount}
-        \nPlantation Creation Date: ${message.guild.createdAt}
-        \nPlantation Current Location: ${message.guild.region}`);
-    } 
-    
-    else if (command === 'args-info') {
-        if (!args.length) {
-            return message.channel.send(`You didn't provide any arguments, ${message.author}!`);
-        }
-        else if (args[0] === 'foo') {
-            return message.channel.send('bar');
-        }
-        message.channel.send(`First argument: ${args[0]}`)
+    // running command here if everything checks out
+    try {
+        command.execute(message, args);
     }
-
-    else if (command === 'kick') {
-        if (!message.mentions.users.size) {
-            message.reply(`To kick a darling. You need to add the '@' mention tag follow by their username`)
-        }
-        // grab the "first" mentioned user from the message
-        // this will return a `User` object, just like `message.author`
-        else {
-            const taggedUser = message.mentions.users.first();
-            message.channel.send(`You wanted to kick: ${taggedUser.username}`);
-        };
-    }
-
-    else if (command === 'my-info') {
-        message.channel.send(`Your username: ${message.author.username}\nYour ID: ${message.author.id}`);
-    }
-
-    else if (command === 'avatar') {
-        if (!message.mentions.users.size) {
-            return message.channel.send(`Your avatar: ${message.author.displayAvatarURL}`);
-        }
-
-        else {
-            const avatarList = message.mentions.users.map((user) => {
-                return message.channel.send(`${user.username}'s Avatar: ${user.displayAvatarURL}`);
-            })
-            // message.channel.send(avatarList)
-        }
-    }
-
-    else if (command === 'prune') {
-        const amount = parseInt(args[0]) + 1;
-    
-        if (isNaN(amount)) {
-            return message.reply('Darling, that doesn\'t seem to be a valid number.');
-        }
-
-        else if (amount <= 1 || amount > 100) {
-            return message.reply('Darling, you can only prune 1 to 100 messages at a time!');
-        }
-
-        else {
-            message.channel.bulkDelete(amount, true).catch((err) => {
-                message.channel.send('There are an error with the prunning command. Please report this error to head of plantation.')
-            });
-            message.channel.send(`Darlings, I finished deleting ${amount - 1} messages in this channel.`)
-        }
+    catch (error) {
+        console.error(error);
+        message.reply('there was an error trying to execute that command!');
     }
 
 });
