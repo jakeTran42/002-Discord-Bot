@@ -62,6 +62,42 @@ client.on('message', message => {
         };
     }
 
+    else if (command === 'my-info') {
+        message.channel.send(`Your username: ${message.author.username}\nYour ID: ${message.author.id}`);
+    }
+
+    else if (command === 'avatar') {
+        if (!message.mentions.users.size) {
+            return message.channel.send(`Your avatar: ${message.author.displayAvatarURL}`);
+        }
+
+        else {
+            const avatarList = message.mentions.users.map((user) => {
+                return message.channel.send(`${user.username}'s Avatar: ${user.displayAvatarURL}`);
+            })
+            // message.channel.send(avatarList)
+        }
+    }
+
+    else if (command === 'prune') {
+        const amount = parseInt(args[0]) + 1;
+    
+        if (isNaN(amount)) {
+            return message.reply('Darling, that doesn\'t seem to be a valid number.');
+        }
+
+        else if (amount <= 1 || amount > 100) {
+            return message.reply('Darling, you can only prune 1 to 100 messages at a time!');
+        }
+
+        else {
+            message.channel.bulkDelete(amount, true).catch((err) => {
+                message.channel.send('There are an error with the prunning command. Please report this error to head of plantation.')
+            });
+            message.channel.send(`Darlings, I finished deleting ${amount - 1} messages in this channel.`)
+        }
+    }
+
 });
 
 

@@ -12,9 +12,9 @@ module.exports = time_greeting = () =>  {
             return greeting.afternoon_greeting
         } else if (current_hour>=16 && current_hour<18) {
             return greeting.random_msg[random_index]
-        } else if (current_hour>=18 && current_hour<21) {
+        } else if (current_hour>=18 && current_hour<22) {
             return greeting.evening_greeting
-        } else if (current_hour>=21 && current_hour<=23) {
+        } else if (current_hour>=22 && current_hour<=23) {
             return greeting.random_msg[random_index]
         } else if (current_hour>=0 && current_hour<=4) {
             return greeting.late_night_msg
