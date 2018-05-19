@@ -31,3 +31,20 @@ switch(current_hour) {
         message.channel.send(greeting.random_msg[3])
         break;
 }
+
+
+// {
+//     "morning_greeting": "Ohayō. Have a good day!",
+//     "afternoon_greeting": "Good afternoon darling!",
+//     "evening_greeting": "Konbanwa my darling! I hope your day was good (^._.^)",
+//     "goodnight_msg": "Oyasumi darling... I hope to see you again tomorrow :kissing:",
+//     "late_night_msg": "It's very late darling. You need to sleep!",
+//     "all_nighter_msg": "You're pulling an allnighter aren't you darling...? :pensive: :disappointed_relieved:",
+//     "random_msg": [
+//         "Hello darling! How are you today?' + ':smiling_imp:",
+//         "I'm so glad I have met you, darling!",
+//         "Darling! Im so glad to see you",
+//         "Konnichiwa darling!",
+//         "Hisashiburi darling!"
+//     ]
+// }

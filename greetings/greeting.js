@@ -1,6 +1,7 @@
 const greeting = require('./greetings.json')
 
-module.exports = function()  {
+
+module.exports = time_greeting = () =>  {
         current_hour = new Date().getHours()
         random_index = Math.floor(Math.random() * greeting.random_msg.length)
         if (current_hour>6 && current_hour<10) {
