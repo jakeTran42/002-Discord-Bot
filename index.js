@@ -22,6 +22,17 @@ for (const file of commandFiles) {
     client.commands.set(command.name, command);
 }
 
+// Creating Ultility functions for commands
+ultilFunc = new Discord.Collection()
+const utilsFiles = fs.readdirSync('./ultils');
+
+for (const files of utilsFiles) {
+    const ultil = require(`./ultils/${files}`);
+    ultilFunc.set(ultil.name, ultil)
+}
+
+
+
 // when the client is ready, run this code
 // this event will trigger whenever your bot:
 // - finishes logging in
@@ -32,59 +43,30 @@ client.on(('ready'), () => {
 
 client.on('message', message => {
 
-    // sanity check if it have prefix
+    // sanity check if message have prefix
     if (!message.content.startsWith(prefix) || message.author.bot) return;
     
     // getting arguments and command name
     const args = message.content.slice(prefix.length).split(/ +/);
     const commandName = args.shift().toLowerCase();
 
-    // if our dynamic command files have the command name, if not return
-    // if (!client.commands.has(commandName)) return;
-
-    // getting command object base on command name
-    // const command = client.commands.get(commandName);
-
-    const command = client.commands.get(commandName) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
+    // find the appropriate command base on command name
+    const command = ultilFunc.get('findCommand').execute(message, commandName)
     if (!command) return;
 
     // if the command is guild Only and cannot be called in DM
-    if (command.guildOnly && message.channel.type !== 'text') {
-        return message.reply('Sorry darling, I can\'t execute that command inside DMs!');
+    if (ultilFunc.get('guildOnly').execute(message, command)){
+        return
     }
 
     // if the command needs and argument and user previded with none
-    if (command.args && !args.length) {
-        let reply = `Darling didn't provide any arguments, ${message.author}!`;
-        if (command.usage) {
-            reply += `\nThe proper usage of !role would be: \`${prefix}${command.name} ${command.usage}\``;
-        }
-        return message.channel.send(reply);
-    };
-
-    // For command that need to have cooldowns
-    if (!cooldowns.has(command.name)) {
-        cooldowns.set(command.name, new Discord.Collection());
+    if (ultilFunc.get('argHelper').execute(message, command, args)) {
+        return
     }
 
-    const now = Date.now();
-    const timestamps = cooldowns.get(command.name);
-    const cooldownAmount = (command.cooldown || 3) * 1000;
-
-    if (!timestamps.has(message.author.id)) {
-        timestamps.set(message.author.id, now);
-        setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
-    }
-    else {
-        const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
-
-        if (now < expirationTime) {
-            const timeLeft = (expirationTime - now) / 1000;
-            return message.reply(` Darling, please wait ${timeLeft.toFixed(1)} more second(s) before reusing the \`!${command.name}\` command.`);
-        }
-    
-        timestamps.set(message.author.id, now);
-        setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
+    // For command that need to have cooldowns, managing cooldowns for users
+    if (ultilFunc.get('cooldownsManager').execute(message, command, cooldowns)) {
+        return
     }
 
     // running command here if everything checks out

@@ -1,5 +1,6 @@
 module.exports = {
     name: 'prune',
+    guildOnly: true,
     cooldown: 10,
     description: 'Prune {x} amount of messages in channel',
     execute(message, args) {
