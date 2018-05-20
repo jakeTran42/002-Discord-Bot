@@ -3,10 +3,12 @@ const Discord = require('discord.js');
 module.exports = {
     name: 'kick',
     guildOnly: true,
+    args: true,
+    usage: '<user> <reason>',
     description: 'Reponse to the !kick command',
     execute(message, args) {
         if (!message.mentions.users.size) {
-            message.reply(`To kick a darling. You need to add the '@' mention tag follow by their username`)
+            message.reply(`To kick a darling. You need to add the '@' tag follow by their username`)
         }
         // grab the "first" mentioned user from the message
         // this will return a `User` object, just like `message.author`
@@ -34,12 +36,14 @@ module.exports = {
             .addField('Channel Kicked In ', `${message.channel}`)
             .addField('Time Kicked: ', `${message.createdAt}`)
             .addField('Reason: ', kReason)
+            .setFooter(`Logged by ${message.client.user.username}`, message.client.user.avatarURL)
+            .setTimestamp()
 
             let kickChannel = message.guild.channels.find('name', 'incidents');
             if(!kickChannel) return message.reply("Cannot find 'incidents' channel, please create one so I can logged the incident.")
 
             message.guild.member(kUser).kick(kReason)
-            kickChannel.send(kickEmbed)
+            return kickChannel.send(kickEmbed)
         }
     }
 }

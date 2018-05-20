@@ -1,5 +1,6 @@
 module.exports  = {
     name: 'role',
+    description: 'Set/View roles for Users',
     args: true,
     usage: '<user> <role>',
     execute(message, args){

@@ -2,7 +2,7 @@ require('dotenv').config();
 
 // environment variables
 const fs = require('fs')
-const {prefix} = require('./config/config.json');
+const { prefix } = require('./config/config.json');
 
 // require the discord.js module
 const Discord = require('discord.js');

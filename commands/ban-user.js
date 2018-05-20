@@ -29,10 +29,10 @@ module.exports = {
             let banEmbed = new Discord.RichEmbed()
             .setDescription('**~Ban~**')
             .setColor('#c40f42')
-            .addField('Baned User ', `${bUser} with ID ${bUser.id}`)
-            .addField('Baned By ', `<@${message.author.id}> with ID ${message.author.id}`)
-            .addField('Channel Baned In ', `${message.channel}`)
-            .addField('Time Baned: ', `${message.createdAt}`)
+            .addField('Banned User ', `${bUser} with ID ${bUser.id}`)
+            .addField('Banned By ', `<@${message.author.id}> with ID ${message.author.id}`)
+            .addField('Channel Banned In ', `${message.channel}`)
+            .addField('Time Banned: ', `${message.createdAt}`)
             .addField('Reason: ', bReason)
 
             let banChannel = message.guild.channels.find('name', 'bans');
