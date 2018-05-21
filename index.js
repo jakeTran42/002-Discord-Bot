@@ -39,6 +39,15 @@ for (const files of utilsFiles) {
 // - reconnects after disconnecting
 client.on(('ready'), () => {
     console.log('Ready!');
+    // const guildList = client.guilds.array();
+    // try {
+    //     guildList.map(guild => {
+    //         let generalChannel = guild.channels.find(`name`, 'general')
+    //         return generalChannel.send('Hello darlings! I\'m back online from some testings')
+    //     })
+    // } catch (error) {
+    //     console.log('Cannot send online messages')
+    // }
 });
 
 client.on('message', message => {

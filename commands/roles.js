@@ -5,7 +5,7 @@ module.exports  = {
     usage: '<user> <role>',
     execute(message, args){
         if (!message.mentions.users.size) {
-            return message.reply('You need to tag someone in your first argument!')
+            return message.reply('You need to tag someone in your message!')
         }
         console.log('Role Command Called')
     }

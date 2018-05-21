@@ -32,7 +32,7 @@ module.exports = {
             const command = commands.get(args[0]);
 
             commandEmbed.addField('Command Name:', `**${command.name}**`)
-            if (command.description) commandEmbed.addField('Command Description:', command.description,)
+            if (command.description) commandEmbed.addField('Command Description:', command.description)
             if (command.aliases) commandEmbed.addField('Command Aliases:', command.aliases.join(' | '))
             if (command.usage) commandEmbed.addField('Command Usages:', `**${prefix}${command.name} ${command.usage}**`)
             commandEmbed.addField('Command Cooldown:', `${command.cooldown || 3} second(s)`).addBlankField(true)
