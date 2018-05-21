@@ -6,6 +6,3 @@ Status - In Progress (day 4 - 5/20/2018)
 
 env = Token
 config = prefix
-
-
-testAcc = TestUser001

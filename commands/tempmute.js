@@ -1,4 +1,5 @@
 const Discord = require('discord.js');
+const ms = require('ms');
 
 module.exports = {
     name: 'mute',
@@ -27,25 +28,19 @@ module.exports = {
 
             // If mute role does not exist, create one
             if (!muteRole) {
-                try {
-                    muteRole = message.guild.createRole({
-                        name: 'muted',
-                        color: '#3a365e',
-                        permissions: []
-                    })
-                    message.guild.channels.map((channel, id) => {
-                        await channel.overwritePermission(muteRole {
-                            SEND_MESSAGES: false,
-                            SEND_REACTIONS: false
-                        })
-                    })
-                }
-                catch (e) {
-                    console.log(e)
-                }
+                return message.reply('Mute role was not found, please create a mute role called \'muted\'')
             }; // End of creating ch
 
+            let muteDuration = args[1];
+            if (!muteDuration) return message.reply('You did not specified mute duration.')
 
+            mUser.addRole(muteRole.id)
+            message.reply(`<@${mUser.id}> had been muted for ${ms(ms(muteDuration))}`)
+
+            setTimeout(() => {
+                mUser.removeRole(muteRole.id)
+                mUser.send(`Darling, you have been unmuted from ${message.channel}. Please behave yourself.`)
+            }, ms(muteDuration))
 
         }
     }

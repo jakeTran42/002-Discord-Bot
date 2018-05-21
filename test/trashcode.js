@@ -31,3 +31,21 @@ switch(current_hour) {
         message.channel.send(greeting.random_msg[3])
         break;
 }
+
+
+try {
+    muteRole = message.guild.createRole({
+        name: 'muted',
+        color: '#3a365e',
+        permissions: []
+    })
+    message.guild.channels.map((channel, id) => {
+        channel.overwritePermission(muteRole, {
+            SEND_MESSAGES: false,
+            SEND_REACTIONS: false
+        })
+    })
+}
+catch (e) {
+    console.log(e)
+}
