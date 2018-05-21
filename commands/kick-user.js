@@ -4,6 +4,7 @@ module.exports = {
     name: 'kick',
     guildOnly: true,
     args: true,
+    modOnly: true,
     usage: '<user> <reason>',
     description: 'Reponse to the !kick command',
     execute(message, args) {

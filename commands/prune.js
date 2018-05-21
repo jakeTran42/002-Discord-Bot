@@ -1,7 +1,10 @@
 module.exports = {
     name: 'prune',
     guildOnly: true,
+    modOnly: true,
     cooldown: 10,
+    args: true,
+    usage: '<number>',
     description: 'Prune {x} amount of messages in channel',
     execute(message, args) {
         const amount = parseInt(args[0]) + 1;

@@ -2,24 +2,24 @@ const { prefix } = require('../config/config.json');
 const Discord = require('discord.js');
 
 module.exports = {
-    name: 'help',
-    description: 'List all of my commands or info about a specific command.',
-    aliases: ['commands'],
-    usage: '[command name]',
+    name: 'modcommands',
+    modOnly: true,
+    guildOnly: true,
+    description: 'List all of moderator\'s commands.',
     cooldown: 5,
     execute(message, args) {
         const { commands } = message.client;
         const{ username, avatarURL } = message.client.user
         const commandEmbed = new Discord.RichEmbed()
         .setAuthor(username, avatarURL).setColor('#4852d6')
-        .addField('To View Specific Command: ', `You can send **__${prefix}help [command name]__**`)
+        .addField('To View Specific Command: ', `You can send **__${prefix}modcommands [command name]__**`)
         .addBlankField(true)
         .setFooter(message.guild || message.author.username, avatarURL).setTimestamp()
 
         if (!args.length) {
 
             commands.map((command) => {
-                if(!command.modOnly || command.name === 'modcommands') {
+                if(command.modOnly) {
                     commandEmbed.addField(`!${command.name}`, `*${command.description}*`)
                 }
             })
@@ -32,15 +32,11 @@ module.exports = {
             
             const command = commands.get(args[0]);
 
-            if (!command.modOnly) {
-                commandEmbed.addField('Command Name:', `**${command.name}**`)
-                if (command.description) commandEmbed.addField('Command Description:', command.description)
-                if (command.aliases) commandEmbed.addField('Command Aliases:', command.aliases.join(' | '))
-                if (command.usage) commandEmbed.addField('Command Usages:', `**${prefix}${command.name} ${command.usage}**`)
-            }
-            else {
-                return message.reply('\`!help\` command cannot be use to check moderator\'s command, please use \`!modcommands <command>\` for that.')
-            }
+            commandEmbed.addField('Command Name:', `**${command.name}**`)
+            if (command.description) commandEmbed.addField('Command Description:', command.description)
+            if (command.aliases) commandEmbed.addField('Command Aliases:', command.aliases.join(' | '))
+            if (command.usage) commandEmbed.addField('Command Usages:', `**${prefix}${command.name} ${command.usage}**`)
+            commandEmbed.addField('Command Cooldown:', `${command.cooldown || 3} second(s)`).addBlankField(true)
         }
 
         message.author.send(commandEmbed)

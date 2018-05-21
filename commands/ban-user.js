@@ -4,6 +4,7 @@ module.exports = {
     name: 'ban',
     guildOnly: true,
     description: 'Reponse to the !ban command',
+    modOnly: true,
     execute(message, args) {
         if (!message.mentions.users.size) {
             message.reply(`To ban a darling. You need to add the '@' mention tag follow by their username`)

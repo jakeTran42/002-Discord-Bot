@@ -68,6 +68,10 @@ client.on('message', message => {
         return
     }
 
+    if (ultilFunc.get('modOnly').execute(message, command)) {
+        return
+    }
+
     // if the command needs and argument and user previded with none
     if (ultilFunc.get('argHelper').execute(message, command, args)) {
         return

@@ -2,6 +2,7 @@ module.exports  = {
     name: 'role',
     description: 'Set/View roles for Users',
     args: true,
+    modOnly: true,
     usage: '<user> <role>',
     execute(message, args){
         if (!message.mentions.users.size) {
