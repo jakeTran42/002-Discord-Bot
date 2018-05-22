@@ -18,10 +18,15 @@ module.exports = {
             // Getting the user being muted
             const taggedUser = message.mentions.users.first();
             let mUser = message.guild.member(taggedUser) || message.guild.members.get(args[0])
-            if (!mUser) return message.reply(`Cannot find ${taggedUser}`);
+            // if (!mUser) return message.reply(`Cannot find ${taggedUser}`);
 
             // if user is already muted then return message
             if (mUser.roles.find(`name`, 'muted')) return message.reply('This darling had already been muted.')
+
+            // getting mute duration
+            let muteDuration = args[1];
+            if (!muteDuration) return message.reply('You did not specified mute duration.')
+            if (ms(muteDuration) > ms('1day')) return message.reply('Darling, this mute duration is too long, cannot be more than 1day!')
 
             // Check for moderator permission
             if (mUser.hasPermission("MANAGE_MESSAGES")) return message.reply(`This darling is a special specimen and cannot be mute.`)
@@ -46,12 +51,6 @@ module.exports = {
                 ADD_REACTIONS: false,
                 SPEAK: false
             })
-
-            // getting mute duration
-            let muteDuration = args[1];
-            if (!muteDuration) return message.reply('You did not specified mute duration.')
-
-            if (ms(muteDuration) > ms('1day')) return message.reply('Darling, this mute duration is too long, cannot be more than 1day!')
 
             // add role to user being mute
             mUser.addRole(muteRole.id).catch(console.error)

@@ -84,7 +84,7 @@ client.on('message', message => {
 
     // running command here if everything checks out
     try {
-        command.execute(message, args);
+        command.execute(message, args, command);
     }
     catch (error) {
         console.error(error);
