@@ -8,7 +8,7 @@ module.exports = {
     args: true,
     modOnly: true,
     usage: '<user> <duration>',
-    execute(message, args) {
+    async execute(message, args) {
         if (!message.mentions.users.size) {
             message.reply(`To mute a darling. You need to add the '@' tag follow by their username and duration`)
         } 
@@ -55,6 +55,8 @@ module.exports = {
                     console.log(e)
                 }) 
             })
+
+            muteRole = message.guild.roles.find(`name`, 'muted');
 
             // add role to user being mute
             mUser.addRole(muteRole.id).catch(console.error)

@@ -3,7 +3,7 @@ const Discord = require('discord.js');
 module.exports = {
     name: 'ban',
     guildOnly: true,
-    description: 'Reponse to the !ban command',
+    description: 'Ban someone from server',
     modOnly: true,
     execute(message, args) {
         if (!message.mentions.users.size) {
@@ -35,9 +35,11 @@ module.exports = {
             .addField('Channel Banned In ', `${message.channel}`)
             .addField('Time Banned: ', `${message.createdAt}`)
             .addField('Reason: ', bReason)
+            .setFooter(`Logged by ${message.client.user.username}`, message.client.user.avatarURL)
+            .setTimestamp()
 
             let banChannel = message.guild.channels.find('name', 'bans');
-            if(!banChannel) return message.reply("Cannot find 'bans' channel, please create one so I can logged the bans.")
+            if(!banChannel) return message.reply("Cannot find 'bans' channel, please create one so I can log the bans.")
 
             message.guild.member(bUser).ban(bReason)
             banChannel.send(banEmbed)

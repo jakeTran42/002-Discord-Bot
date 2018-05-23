@@ -41,7 +41,7 @@ module.exports = {
             .setTimestamp()
 
             let kickChannel = message.guild.channels.find('name', 'incidents');
-            if(!kickChannel) return message.reply("Cannot find 'incidents' channel, please create one so I can logged the incident.")
+            if(!kickChannel) return message.reply("Cannot find 'incidents' channel, please create one so I can log the kick.")
 
             message.guild.member(kUser).kick(kReason)
             return kickChannel.send(kickEmbed)
