@@ -14,11 +14,15 @@ module.exports = {
             timer = args[0]
             messages = args.slice(1).join(' ');
 
+            message.author.send('Your reminder had been set darling!')
+            .catch((error) => {
+                console.log(error)
+                return message.reply('it seems like I can\'t DM you!')
+            });
+
             setTimeout(() => {
                 message.author.send(`You've set a reminder at this time with the message:\n\'**${messages}**\'`)
             }, ms(timer));
-
-            message.reply('Your reminder had been set darling!')
         }
     }
 }

@@ -38,7 +38,7 @@ module.exports = {
             // If mute role does not exist, create one
             if (!muteRole) {
                 // return message.reply('Mute role was not found, please create a mute role called \'muted\'')
-                muterole = message.guild.createRole({
+                muteRole = message.guild.createRole({
                         name: "muted",
                         color: "#54535b",
                         permissions:[]
@@ -46,10 +46,14 @@ module.exports = {
             }; // End of creating ch
 
             // adding mute role to message's channel and setting permisison
-            message.channel.overwritePermissions(muteRole, {
-                SEND_MESSAGES: false,
-                ADD_REACTIONS: false,
-                SPEAK: false
+            message.guild.channels.map((channel) => {
+                channel.overwritePermissions(muteRole, {
+                    SEND_MESSAGES: false,
+                    ADD_REACTIONS: false,
+                    SPEAK: false
+                }).catch(e => {
+                    console.log(e)
+                }) 
             })
 
             // add role to user being mute

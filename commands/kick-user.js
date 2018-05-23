@@ -6,7 +6,7 @@ module.exports = {
     args: true,
     modOnly: true,
     usage: '<user> <reason>',
-    description: 'Reponse to the !kick command',
+    description: 'Mod can kick user from server using this command.',
     execute(message, args) {
         if (!message.mentions.users.size) {
             message.reply(`To kick a darling. You need to add the '@' tag follow by their username`)
