@@ -8,7 +8,7 @@ module.exports = {
     args: true,
     modOnly: true,
     usage: '<user> <duration>',
-    execute(message, args) {
+    async execute(message, args) {
         if (!message.mentions.users.size) {
             message.reply(`To mute a darling. You need to add the '@' tag follow by their username and duration`)
         } 
@@ -46,11 +46,15 @@ module.exports = {
             }; // End of creating ch
 
             // adding mute role to message's channel and setting permisison
-            message.channel.overwritePermissions(muteRole, {
-                SEND_MESSAGES: false,
-                ADD_REACTIONS: false,
-                SPEAK: false
+            message.guild.channels.forEach((channel) => {
+                channel.overwritePermissions(muteRole, {
+                    SEND_MESSAGES: false,
+                    ADD_REACTIONS: false,
+                    SPEAK: false
+                })
             })
+
+            muteRole = message.guild.roles.find(`name`, 'muted');
 
             // add role to user being mute
             mUser.addRole(muteRole.id).catch(console.error)
