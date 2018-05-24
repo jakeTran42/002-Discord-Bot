@@ -18,7 +18,7 @@ module.exports = {
             // Getting the user being muted
             const taggedUser = message.mentions.users.first();
             let mUser = message.guild.member(taggedUser) || message.guild.members.get(args[0])
-            // if (!mUser) return message.reply(`Cannot find ${taggedUser}`);
+            if (!mUser) return message.reply(`Cannot find ${taggedUser}`);
 
             // if user is already muted then return message
             if (mUser.roles.find(`name`, 'muted')) return message.reply('This darling had already been muted.')
@@ -43,10 +43,12 @@ module.exports = {
                         color: "#54535b",
                         permissions:[]
                 })
+                return message.channel.send('The server did not have a role called \'**muted**\', so I\'ve went went ahead and created one.\
+                \nThe \`!mute\` command now will function properly.')
             }; // End of creating ch
 
             // adding mute role to message's channel and setting permisison
-            message.guild.channels.map((channel) => {
+            await message.guild.channels.map((channel) => {
                 channel.overwritePermissions(muteRole, {
                     SEND_MESSAGES: false,
                     ADD_REACTIONS: false,
@@ -56,18 +58,24 @@ module.exports = {
                 }) 
             })
 
-            muteRole = message.guild.roles.find(`name`, 'muted');
-
             // add role to user being mute
-            mUser.addRole(muteRole.id).catch(console.error)
+            await mUser.addRole(muteRole.id).catch(console.error)
             message.reply(`<@${mUser.id}> had been muted for ${ms(ms(muteDuration))}`)
 
             // set time out to when unmute user
-            setTimeout(() => {
-                mUser.removeRole(muteRole.id).catch(console.error)
-                mUser.send(`Darling, you have been unmuted from ${message.guild} - ${message.channel}. Please behave yourself.`)
-            }, ms(muteDuration))
 
+            setTimeout(async () => {
+                await mUser.removeRole(muteRole.id).catch(console.error)
+
+                try {
+                    await mUser.send(`Darling, you have been unmuted from ${message.guild} - ${message.channel}. Please behave yourself.`)
+                }
+
+                catch (error) {
+                    message.channel.send(`${mUser} have been unmuted.\nThis message was blocked by ${mUser}'s DM so it was sent here instead.`)
+                } 
+
+            }, ms(muteDuration))
         }
     }
 }

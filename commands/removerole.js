@@ -2,7 +2,7 @@ const Discord = require('discord.js');
 
 module.exports  = {
     name: 'removerole',
-    description: 'Add roles for Users',
+    description: 'Remove roles from Users',
     args: true,
     modOnly: true,
     guildOnly: true,
@@ -13,10 +13,13 @@ module.exports  = {
         } 
 
         else {
+
+            if(args.length < 2 || !args[0].startsWith('<@')) return message.reply(`You need to use this command in this format \`!removerole <user> <role>\`  <role> can be any length`)
+
             if(!message.member.hasPermission('MANAGE_MEMBERS')) return message.reply(`Sorry darling, you do not have permission to remove a role`);
             const taggedUser = message.mentions.users.first();
             let rMember = message.guild.member(taggedUser) || message.guild.members.get(args[0])
-            let roleAdd = args.slice(1).join(' ');
+            let roleAdd = [...args].slice(1).join(' ');
             if(!roleAdd) return message.reply("Darling, you need to supply a role to assign. Use \`!modcommands addrole\` if you need help.")
 
             let gRole = message.guild.roles.find(`name`, roleAdd);

@@ -7,7 +7,7 @@ module.exports = {
     aliases: ['commands'],
     usage: '[command name]',
     cooldown: 5,
-    execute(message, args) {
+    async execute(message, args) {
         const { commands } = message.client;
         const{ username, avatarURL } = message.client.user
         const commandEmbed = new Discord.RichEmbed()
@@ -43,7 +43,7 @@ module.exports = {
             }
         }
 
-        message.author.send(commandEmbed)
+        await message.author.send(commandEmbed)
             .then(() => {
                 if (message.channel.type !== 'dm') {
                     message.reply('I\'ve sent you a DM with all my commands!');

@@ -12,6 +12,9 @@ module.exports = {
         // grab the "first" mentioned user from the message
         // this will return a `User` object, just like `message.author`
         else {
+
+            if(args.length < 2 || !args[0].startsWith('<@')) return message.reply(`You need to use this command in this format \`!ban <user> <reason>\`  <reason> can be any length`)
+
             const taggedUser = message.mentions.users.first();
             message.channel.send(`**${message.author.username}** wanted to ban: **${taggedUser.username}**`);
 
