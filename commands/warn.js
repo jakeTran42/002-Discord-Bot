@@ -36,16 +36,17 @@ module.exports = {
                 if (err) console.log(err)
             })
 
-            // let messageData = `You have been warned by **${message.author}** for **${reason}** in channel **${message.channel}** for server **${message.guild}**.\
-            // \nThis is your **__${warns[wUser.id].warns}__** warnings. Please behave according to server's guideline.`
+            let messageData = `__You have been warned by **${message.author}**__ \nReason: "**${reason}**"\nChannel: **${message.channel}**\nServer: **${message.guild}**.\
+            \nThis is your **__${warns[wUser.id].warns}__** warnings. Please behave according to server's guideline.`
 
-            // taggedUser.send(messageData, { split: true })
-            //     .then(() =>{
-            //     message.channel.send(`${wUser}, I have sent you a warning in your DM`)
-            // })
-            //     .catch(() => {
-            //     message.channel.send(`${wUser}, your DM is blocked so please check the incident channel for your warning level.`)
-            // })
+
+            taggedUser.send(messageData, { split: true })
+                .then(() =>{
+                message.channel.send(`${wUser}, I have sent you a warning in your DM`)
+            })
+                .catch(() => {
+                message.channel.send(`${wUser}, your DM is blocked so please check the incident channel for your warning.`)
+            })
 
         }
     }
