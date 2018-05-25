@@ -24,10 +24,10 @@ for (const file of commandFiles) {
 
 // Creating Ultility functions for commands
 ultilFunc = new Discord.Collection()
-const utilsFiles = fs.readdirSync('./ultils');
+const utilsFiles = fs.readdirSync('./serverUltils');
 
 for (const files of utilsFiles) {
-    const ultil = require(`./ultils/${files}`);
+    const ultil = require(`./serverUltils/${files}`);
     ultilFunc.set(ultil.name, ultil)
 }
 
