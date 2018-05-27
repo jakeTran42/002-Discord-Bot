@@ -79,16 +79,16 @@ module.exports = {
                         name: 'muted',
                         permissions:[]
                     }).then(async (muteRole) => {
+                        muteRoleRemove = muteRole
                         await wUser.addRole(muteRole.id)
-                    }).then((muteRole) => {
-                        // setTimeout(() => {
-                        //     wUser.removeRole(muteRole)
-                        // }, ms('10s'));
+                        setTimeout(() => {
+                            wUser.removeRole(muteRole.id)
+                        }, ms('10s'));
                     }).catch((e) => {console.log(e)})
                 } else{
                     await wUser.addRole(muteRole.id)
-                    setTimeout(() => {
-                        wUser.removeRole(muteRole)
+                    setTimeout(async () => {
+                        await wUser.removeRole(muteRole)
                     }, ms('10s'));
                 }
 
