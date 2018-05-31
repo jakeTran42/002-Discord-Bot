@@ -19,7 +19,7 @@ module.exports = {
         }
 
         else {
-            if(args.length < 2 || !args[0].startsWith('<@')) return message.reply(`You need to use this command in this format \`!warning <user> <reason>\`  <reason> can be any length`);
+            if(args.length < 2 || !args[0].startsWith('@')) return message.reply(`You need to use this command in this format \`!warning <user> <reason>\`  <reason> can be any length`);
             if(!message.member.hasPermission('MANAGE_MEMBERS')) return message.reply('Sorry darling, you do not have permission for that.');
 
 
@@ -49,14 +49,14 @@ module.exports = {
                 incidentCh = await message.guild.createChannel('incidents', 'text')
             }
 
-            everyoneRole = message.guild.roles.find(`name`, '@everyone')
+            // everyoneRole = message.guild.roles.find(`name`, '@everyone')
 
-            if (everyoneRole && incidentCh) {
-                await incidentCh.overwritePermissions(everyoneRole, {
-                    SEND_MESSAGES: false,
-                    SEND_REACTIONS: false
-                })
-            }
+            // if (everyoneRole && incidentCh) {
+            //     await incidentCh.overwritePermissions(everyoneRole, {
+            //         SEND_MESSAGES: false,
+            //         SEND_REACTIONS: false
+            //     })
+            // }
 
             if(incidentCh) incidentCh.send(messageData)
 
