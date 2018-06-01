@@ -19,7 +19,7 @@ module.exports = {
         }
 
         else {
-            if(args.length < 2 || !args[0].startsWith('@')) return message.reply(`You need to use this command in this format \`!warning <user> <reason>\`  <reason> can be any length`);
+            if(args.length < 2 || !args[0].startsWith('<@')) return message.reply(`You need to use this command in this format \`!warning <user> <reason>\`  <reason> can be any length`);
             if(!message.member.hasPermission('MANAGE_MEMBERS')) return message.reply('Sorry darling, you do not have permission for that.');
 
 
@@ -27,6 +27,15 @@ module.exports = {
             let wUser = message.guild.member(taggedUser) || message.guild.members.get(args[0])
             if(wUser.hasPermission('MANAGE_MESSAGES')) return message.reply('This darling is a special specimen and cannot be warn!')
             let reason = [...args].slice(1).join(' ');
+
+            let muteRole = message.guild.roles.find(`name`, 'muted');
+
+            if(!muteRole) {
+                muteRole = message.guild.createRole({
+                    name: 'muted',
+                    permissions:[]
+                })
+            }
 
             if(!warns[wUser.id]) {
                 warns[wUser.id] = {warns: 0};
@@ -70,27 +79,12 @@ module.exports = {
                 message.channel.send(`${wUser}, your DM is blocked so please check the incidents channel (if it exist) for your warning.`);
             })
 
-            if (warns[wUser.id].warns > 6) {
-
-                let muteRole = message.guild.roles.find(`name`, 'muted');
-
-                if (!muteRole) {
-                    muteRole = message.guild.createRole({
-                        name: 'muted',
-                        permissions:[]
-                    }).then(async (muteRole) => {
-                        muteRoleRemove = muteRole
-                        await wUser.addRole(muteRole.id)
-                        setTimeout(() => {
-                            wUser.removeRole(muteRole.id)
-                        }, ms('10s'));
-                    }).catch((e) => {console.log(e)})
-                } else{
-                    await wUser.addRole(muteRole.id)
-                    setTimeout(async () => {
-                        await wUser.removeRole(muteRole)
-                    }, ms('10s'));
-                }
+            if (warns[wUser.id].warns > 6 && muteRole) {
+         
+                await wUser.addRole(muteRole.id)
+                setTimeout(async () => {
+                    await wUser.removeRole(muteRole)
+                }, ms('10s'));
 
                 await message.guild.channels.map((channel) => {
                     channel.overwritePermissions(muteRole, {
@@ -102,6 +96,10 @@ module.exports = {
                     }) 
                 })
 
+            }
+
+            else {
+                message.reply(`Please ask a darling (admin) to create a 'muted' role.`)
             }
 
         }
