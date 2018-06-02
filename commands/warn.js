@@ -37,6 +37,18 @@ module.exports = {
                 })
             }
 
+            if (muteRole) {
+                await message.guild.channels.map((channel) => {
+                    channel.overwritePermissions(muteRole, {
+                        SEND_MESSAGES: false,
+                        ADD_REACTIONS: false,
+                        SPEAK: false
+                    }).catch(e => {
+                        console.log(e)
+                    }) 
+                })
+            }
+
             if(!warns[wUser.id]) {
                 warns[wUser.id] = {warns: 0};
             };
@@ -79,22 +91,12 @@ module.exports = {
                 message.channel.send(`${wUser}, your DM is blocked so please check the incidents channel (if it exist) for your warning.`);
             })
 
-            if (warns[wUser.id].warns > 6 && muteRole) {
+            if (warns[wUser.id].warns > 3 && muteRole) {
          
                 await wUser.addRole(muteRole.id)
                 setTimeout(async () => {
                     await wUser.removeRole(muteRole)
                 }, ms('10s'));
-
-                await message.guild.channels.map((channel) => {
-                    channel.overwritePermissions(muteRole, {
-                        SEND_MESSAGES: false,
-                        ADD_REACTIONS: false,
-                        SPEAK: false
-                    }).catch(e => {
-                        console.log(e)
-                    }) 
-                })
 
             }
 
