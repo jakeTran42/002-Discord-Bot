@@ -37,18 +37,6 @@ module.exports = {
                 })
             }
 
-            if (muteRole) {
-                await message.guild.channels.map((channel) => {
-                    channel.overwritePermissions(muteRole, {
-                        SEND_MESSAGES: false,
-                        ADD_REACTIONS: false,
-                        SPEAK: false
-                    }).catch(e => {
-                        console.log(e)
-                    }) 
-                })
-            }
-
             if(!warns[wUser.id]) {
                 warns[wUser.id] = {warns: 0};
             };
@@ -92,6 +80,16 @@ module.exports = {
             })
 
             if (warns[wUser.id].warns > 3 && muteRole) {
+
+                await message.guild.channels.map((channel) => {
+                    channel.overwritePermissions(muteRole, {
+                        SEND_MESSAGES: false,
+                        ADD_REACTIONS: false,
+                        SPEAK: false
+                    }).catch(e => {
+                        console.log(e)
+                    }) 
+                })
          
                 await wUser.addRole(muteRole.id)
                 setTimeout(async () => {
