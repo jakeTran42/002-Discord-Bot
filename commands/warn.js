@@ -90,11 +90,15 @@ module.exports = {
                         console.log(e)
                     }) 
                 })
-         
+                
                 await wUser.addRole(muteRole.id)
                 setTimeout(async () => {
                     await wUser.removeRole(muteRole)
                 }, ms('10s'));
+
+                if(warns[wUser.id].warns === 5) {
+                    wUser.kick(reason)
+                }
 
             }
 
