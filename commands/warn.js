@@ -73,13 +73,13 @@ module.exports = {
             // DM the user also
             taggedUser.send(messageData, { split: true })
                 .then(() =>{
-                message.channel.send(`${wUser}, I have sent you a warning in your DM and to 'incidents' channel (if it exist)`);
+                message.channel.send(`${wUser}, I have sent you a warning in your DM and to 'incidents' channel`);
             })
                 .catch(() => {
-                message.channel.send(`${wUser}, your DM is blocked so please check the incidents channel (if it exist) for your warning.`);
+                message.channel.send(`${wUser}, your DM is blocked so please check the 'incidents' channel for your warning.`);
             })
 
-            if (warns[wUser.id].warns > 3 && muteRole) {
+            if (warns[wUser.id].warns > 2 && muteRole) {
 
                 await message.guild.channels.map((channel) => {
                     channel.overwritePermissions(muteRole, {
@@ -90,22 +90,20 @@ module.exports = {
                         console.log(e)
                     }) 
                 })
-                
-                await wUser.addRole(muteRole.id)
-                setTimeout(async () => {
-                    await wUser.removeRole(muteRole)
-                }, ms('10s'));
 
-                if(warns[wUser.id].warns === 5) {
+                if (warns[wUser.id].warns === 3)  {
+                    await wUser.addRole(muteRole.id)
+                    setTimeout(async () => {
+                        await wUser.removeRole(muteRole)
+                    }, ms('10s'));
+                }
+                
+                if (warns[wUser.id].warns === 6) {
                     wUser.kick(reason)
+                    if(incidentCh) incidentCh.send(`${wUser} has over 5 warnings and therefore has been kicked from this plantation.`)
                 }
 
             }
-
-            else {
-                message.reply(`Please ask a darling (admin) to create a 'muted' role.`)
-            }
-
         }
     }
 }
