@@ -98,9 +98,18 @@ module.exports = {
                     }, ms('10s'));
                 }
                 
-                if (warns[wUser.id].warns === 6) {
-                    wUser.kick(reason)
-                    if(incidentCh) incidentCh.send(`${wUser} has over 5 warnings and therefore has been kicked from this plantation.`)
+                if (warns[wUser.id].warns > 5) {
+
+                    let kickedMessage = `${taggedUser}, you have been kicked from **__${message.guild}__** due to multiple warnings`
+                    await taggedUser.send(kickedMessage, { split: true })
+                        .then(() => {
+                        if(incidentCh) incidentCh.send(`${wUser} has over **__5__** warnings and therefore has been kicked from this plantation.`)
+                    })
+                        .catch((error) => {
+                        console.log(error)
+                    })
+
+                    await wUser.kick(reason)
                 }
 
             }

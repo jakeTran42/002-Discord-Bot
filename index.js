@@ -50,6 +50,36 @@ client.on(('ready'), () => {
     // }
 });
 
+client.on(('guildMemberAdd'), async (member) => {
+    // console.log(`${member.id} joined the server`)
+    let welcomeChannel = member.guild.channels.find(`name`, 'welcome-goodbyes');
+    if (!welcomeChannel) {
+        await member.guild.createChannel(`welcome-goodbyes`, 'text').then(() => {
+            let welcomeCh = member.guild.channels.find(`name`, 'welcome-goodbyes');
+            welcomeCh.send(`${member} had joined **__${member.guild}__**, please give them a warm welcome.`)
+        }).catch((error) => {
+            console.log(error)
+        })
+    } else {
+        welcomeChannel.send(`${member} had joined **__${member.guild}__**, please give this parasite a warm welcome.`)
+    }
+})
+
+client.on(('guildMemberRemove'), async (member) => {
+    // console.log(`${member.id} joined the server`)
+    let leaveChannel = member.guild.channels.find(`name`, 'welcome-goodbyes');
+    if (!leaveChannel) {
+        await member.guild.createChannel(`welcome-goodbyes`, 'text').then(() => {
+            let leaveCh = member.guild.channels.find(`name`, 'welcome-goodbyes');
+            leaveCh.send(`${member} had left **__${member.guild}__**`)
+        }).catch((error) => {
+            console.log(error)
+        })
+    } else {
+        leaveChannel.send(`${member} had left **__${member.guild}__**`)
+    }
+})
+
 client.on('message', message => {
 
     // sanity check if message have prefix
