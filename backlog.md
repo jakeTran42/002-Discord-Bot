@@ -1,0 +1,1 @@
+1. Add more features relating to points and rewards
